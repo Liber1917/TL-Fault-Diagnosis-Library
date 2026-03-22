@@ -9,11 +9,14 @@ import load_methods
 def get_files(root, dataset, faults, fault_label, signal_size):
     data, actual_labels = [], []
     data_load = getattr(load_methods, dataset)
-    
+
     for _, name in enumerate(faults):
         data_dir = os.path.join(root, name)
 
         for item in os.listdir(data_dir):
+            # 只处理 .mat 文件，跳过 Zone.Identifier 等系统文件
+            if not item.endswith('.mat') or 'Zone' in item:
+                continue
             item_path = os.path.join(data_dir, item)
             signal = data_load(item_path)
 

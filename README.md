@@ -52,6 +52,22 @@ Our code runs fine with the following prerequisites:
 *  Pandas (>=1.5.3)
 *  tqdm (>=4.46.1)
 *  Scipy (>=1.10)
+*  matplotlib (>=3.7.0) - for visualization
+*  scikit-learn (>=1.3.0) - for t-SNE visualization
+
+### Quick Installation
+```bash
+# Install PyTorch (CPU version)
+pip3 install torch==1.13.1+cpu -f https://download.pytorch.org/whl/torch_stable.html
+
+# Install other dependencies
+pip3 install numpy pandas tqdm scipy matplotlib scikit-learn
+```
+
+Or use the provided requirements file:
+```bash
+pip3 install -r requirements.txt
+```
 
 ### Repository Access
 #### Direct Download
@@ -157,7 +173,35 @@ python train.py --model_name DAN --source CWRU_0 --target CWRU_1 --train_mode si
 ##### Many-to-One Transfer
 Example: Transfer from CWRU operation condition 0 and condition 1 to condition 2.
 ```shell
-python train.py --model_name MFSAN --source CWRU_0,CWRU_1 --target CWRU_2 --train_mode multi_source --cuda_device 0 
+python train.py --model_name MFSAN --source CWRU_0,CWRU_1 --target CWRU_2 --train_mode multi_source --cuda_device 0
+```
+
+**Note**: For Many-to-One Transfer, you need:
+- At least 2 source domains (e.g., CWRU_0, CWRU_1)
+- 1 target domain (e.g., CWRU_2)
+- Each domain should have the same fault categories (9 classes for CWRU)
+
+**Dataset Organization for CWRU**:
+```
+datasets/CWRU/
+├── condition_0/    # 0 HP, 1797 RPM
+│   ├── ball_07/    # Ball fault 7 mils
+│   ├── ball_14/    # Ball fault 14 mils
+│   ├── ball_21/    # Ball fault 21 mils
+│   ├── inner_07/   # Inner race fault 7 mils
+│   ├── inner_14/
+│   ├── inner_21/
+│   ├── outer_07/   # Outer race fault 7 mils
+│   ├── outer_14/
+│   └── outer_21/
+├── condition_1/    # 1 HP, 1772 RPM
+├── condition_2/    # 2 HP, 1750 RPM
+└── condition_3/    # 3 HP, 1730 RPM
+```
+
+Use the provided script to organize CWRU data:
+```bash
+python3 organize_cwru_data.py
 ```
 
 ### Cross-dataset Transfer
@@ -200,6 +244,31 @@ python train.py --model_name MFSAN --load_path ./ckpt/MFSAN/multi_source/**.pth 
 NOTE: The `--source` flag is not necessary for some models when loading weights for testing. However, for certain models, the number of sources is required to define the model structure, and the specific sources used are not important in this context.
 
 🛠️ For more experimental settings, please modify the arguments in `opt.py`.
+
+## Visualization
+
+We provide visualization scripts to analyze the training results:
+
+### Training Curves
+Generate loss and accuracy plots from training logs:
+```bash
+python3 visualize_results.py
+```
+Output: `training_curves.png`
+
+### t-SNE Feature Visualization
+Visualize feature distributions using t-SNE:
+```bash
+python3 visualize_tsne_simple.py
+```
+Output: `tsne_visualization.png`
+
+Results are saved in `ckpt/<model_name>/<train_mode>/`.
+
+## Reproduction Guide
+
+For a detailed step-by-step reproduction guide, please refer to [REPRODUCTION.md](./REPRODUCTION.md).
+
 ## Contact
 We welcome feedback, inquiries, and suggestions to improve our work. If you encounter any issues with our code or have recommendations, please don't hesitate to reach out. You can contact Jinyuan Zhang via email at feaxure@outlook.com, or alternatively, feel free to post your queries or suggestions in the [Issues](https://github.com/Feaxure-fresh/TL-Bearing-Fault-Diagnosis/issues) section of our GitHub repository.
 
