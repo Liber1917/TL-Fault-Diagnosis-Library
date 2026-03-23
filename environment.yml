@@ -1,0 +1,32 @@
+# TL-Fault-Diagnosis-Library Conda Environment
+# Usage: conda env create -f environment.yml
+
+name: tl-fault
+
+channels:
+  - pytorch
+  - conda-forge
+  - defaults
+
+dependencies:
+  - python>=3.8
+  - pip
+
+  # PyTorch (CPU version - works on all platforms)
+  - pytorch>=1.10.0
+  - cpuonly
+
+  # Core dependencies
+  - numpy>=1.21.2
+  - pandas>=1.5.3
+  - scipy>=1.10.0
+  - tqdm>=4.46.1
+
+  # Visualization & ML
+  - matplotlib>=3.7.0
+  - scikit-learn>=1.3.0
+
+  # pip-only packages (not available in conda)
+  - pip:
+    # - torch (if using conda-forge channel instead)
+    # Add any pip-only packages here
